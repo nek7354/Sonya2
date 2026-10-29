@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#05070f">
+<title>Соня, загадай желание ✨</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night-1:#0a0e1a;
+    --night-2:#05070f;
+    --amber:#fbbf24;
+    --amber-deep:#f59e0b;
+    --cream:#fef3c7;
+    --ink:#1a1a2e;
+    --muted:#8b93a8;
+    --line:rgba(254,243,199,.12);
+    --card:#131826;
+    --card-hi:#1a2135;
+    --teal:#5eead4;
+    --pink:#f9a8d4;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    background:#000;
+    color:var(--cream);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    overflow:hidden;
+  }
+
+  .phone{
+    position:relative;
+    width:100%;
+    max-width:420px;
+    height:100vh;
+    background:var(--night-2);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+
+  @media (min-width:480px) and (min-height:760px){
+    .phone{
+      height:880px;
+      border-radius:44px;
+      box-shadow:0 0 0 10px #0a0a0a, 0 0 0 12px #1a1a1a, 0 40px 100px rgba(0,0,0,.85);
+    }
+  }
+
+  /* ======================= WISH SCREEN ======================= */
+  .wish-screen{
+    position:absolute;
+    inset:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -150px, rgba(99,102,241,.18), transparent 70%),
+      radial-gradient(ellipse 700px 500px at 100% 100%, rgba(139,92,246,.10), transparent 70%),
+      radial-gradient(ellipse 500px 400px at 0% 60%, rgba(30,64,175,.12), transparent 70%),
+      linear-gradient(180deg, #0a0e1a 0%, #05070f 60%, #03040a 100%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:30px 22px 40px;
+    z-index:10;
+    transition:opacity 1s ease, transform 1s ease;
+  }
+
+  .wish-screen.fading{
+    opacity:0;
+    transform:scale(1.04);
+    pointer-events:none;
+  }
+
+  .stars{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+  }
+  .star{
+    position:absolute;
+    background:#fff;
+    border-radius:50%;
+    box-shadow:0 0 4px rgba(255,255,255,.85);
+    animation:twinkle 4s infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{opacity:.25;transform:scale(1);}
+    50%{opacity:1;transform:scale(1.15);}
+  }
+
+  .wish-kicker{
+    font-family:'Oswald',sans-serif;
+    font-size:11px;
+    letter-spacing:.32em;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin-bottom:14px;
+    opacity:0;
+    animation:fade-in .8s .3s forwards;
+    position:relative;
+    z-index:2;
+  }
+
+  .wish-title{
+    font-family:'Caveat',cursive;
+    font-size:42px;
+    line-height:1.06;
+    text-align:center;
+    color:var(--cream);
+    margin-bottom:6px;
+    font-weight:700;
+    opacity:0;
+    animation:fade-in .9s .5s forwards;
+    position:relative;
+    z-index:2;
+    text-shadow:0 0 30px rgba(251,191,36,.25);
+  }
+
+  @keyframes fade-in{
+    from{opacity:0;transform:translateY(8px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+
+  /* Небесный текст (желание) */
+  .sky-text{
+    font-family:'Caveat',cursive;
+    font-size:26px;
+    line-height:1.25;
+    text-align:center;
+    color:var(--cream);
+    max-width:320px;
+    min-height:0;
+    margin:0 0 16px;
+    padding:0 12px;
+    text-shadow:
+      0 0 20px rgba(251,191,36,.7),
+      0 0 40px rgba(251,191,36,.35),
+      0 0 70px rgba(251,191,36,.15);
+    opacity:0;
+    transform:translateY(6px);
+    transition:opacity .5s ease, transform .5s ease;
+    word-break:break-word;
+    position:relative;
+    z-index:2;
+  }
+  .sky-text.visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* ======================= LANTERN ======================= */
+  .lantern-wrap{
+    position:relative;
+    width:160px;
+    height:230px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    margin:4px 0 18px;
+    z-index:2;
+    transition:transform .3s ease;
+  }
+  .lantern-wrap:active{transform:scale(.97);}
+
+  .lantern-wrap.flying{
+    animation:lantern-fly 3.4s cubic-bezier(.4,0,.6,1) forwards;
+    pointer-events:none;
+  }
+  @keyframes lantern-fly{
+    0%{transform:translateY(0) scale(1);opacity:1;}
+    20%{transform:translateY(-8px) scale(1.03);opacity:1;}
+    60%{transform:translateY(-140px) scale(.72);opacity:.95;}
+    100%{transform:translateY(-700px) scale(.12);opacity:0;}
+  }
+
+  .lantern{
+    position:relative;
+    width:126px;
+    height:170px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .lantern-handle{
+    position:absolute;
+    top:-18px;
+    left:50%;
+    transform:translateX(-50%);
+    width:36px;
+    height:14px;
+    border:1.5px solid #6b5540;
+    border-bottom:none;
+    border-radius:36px 36px 0 0;
+    opacity:.7;
+  }
+
+  .lantern-body{
+    width:100%;
+    height:100%;
+    background:linear-gradient(180deg, #ddd3c2 0%, #c9bda6 45%, #b3a488 100%);
+    border-radius:46% 46% 28% 28% / 22% 22% 14% 14%;
+    position:relative;
+    transition:background .9s ease, box-shadow .9s ease;
+    box-shadow:
+      inset -18px 0 34px rgba(0,0,0,.22),
+      inset 18px 0 30px rgba(0,0,0,.16),
+      inset 0 -24px 34px rgba(0,0,0,.28),
+      0 12px 30px rgba(0,0,0,.5);
+    overflow:hidden;
+  }
+
+  /* вертикальные «складки» бумаги */
+  .lantern-body::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:
+      repeating-linear-gradient(90deg, transparent 0 14px, rgba(0,0,0,.06) 14px 15px);
+    border-radius:inherit;
+    pointer-events:none;
+  }
+
+  /* горлышко сверху */
+  .lantern-body::after{
+    content:'';
+    position:absolute;
+    top:-2px;
+    left:50%;
+    transform:translateX(-50%);
+    width:26px;
+    height:6px;
+    background:#4a3a2a;
+    border-radius:3px;
+    opacity:.85;
+  }
+
+  .lantern-base{
+    position:absolute;
+    bottom:-6px;
+    left:50%;
+    transform:translateX(-50%);
+    width:34px;
+    height:8px;
+    background:linear-gradient(180deg,#3a2a1a,#1f1508);
+    border-radius:0 0 4px 4px;
+    box-shadow:0 3px 8px rgba(0,0,0,.5);
+  }
+
+  .lantern-flame{
+    width:18px;
+    height:28px;
+    background:radial-gradient(ellipse at 50% 60%, #fff7ed 0%, #fbbf24 40%, #f59e0b 75%, #ea580c 100%);
+    border-radius:50% 50% 50% 50% / 65% 65% 35% 35%;
+    opacity:0;
+    filter:blur(.4px);
+    box-shadow:0 0 20px #fbbf24, 0 0 44px #f59e0b, 0 0 70px rgba(245,158,11,.55);
+    transition:opacity .8s ease, transform .3s ease;
+    position:relative;
+    z-index:1;
+  }
+
+  .lantern.lit .lantern-body{
+    background:linear-gradient(180deg, #fff7ed 0%, #fef3c7 22%, #fcd34d 60%, #f59e0b 100%);
+    box-shadow:
+      inset -18px 0 34px rgba(245,158,11,.30),
+      inset 18px 0 30px rgba(245,158,11,.22),
+      inset 0 -24px 34px rgba(180,83,9,.35),
+      0 0 60px rgba(251,191,36,.55),
+      0 0 120px rgba(251,191,36,.30),
+      0 0 180px rgba(251,191,36,.15);
+  }
+  .lantern.lit .lantern-flame{
+    opacity:1;
+    animation:flame-flicker .18s ease-in-out infinite alternate;
+  }
+  @keyframes flame-flicker{
+    0%{transform:scale(1) translateY(0);}
+    100%{transform:scale(1.08) translateY(-2px);}
+  }
+
+  /* Угольки */
+  .ember{
+    position:absolute;
+    width:4px;height:4px;
+    background:#fbbf24;
+    border-radius:50%;
+    box-shadow:0 0 8px #fbbf24, 0 0 14px #f59e0b;
+    pointer-events:none;
+    z-index:3;
+    animation:ember-rise linear forwards;
+  }
+  @keyframes ember-rise{
+    0%{transform:translateY(0) scale(1);opacity:1;}
+    100%{transform:translateY(-130px) scale(.25);opacity:0;}
+  }
+
+  /* подсказка "нажми" */
+  .tap-hint{
+    font-family:'Caveat',cursive;
+    font-size:20px;
+    color:rgba(254,243,199,.55);
+    margin-bottom:20px;
+    text-align:center;
+    animation:hint-pulse 2.4s ease-in-out infinite;
+    transition:opacity .5s;
+    position:relative;
+    z-index:2;
+  }
+  .tap-hint.hide{opacity:0;}
+  @keyframes hint-pulse{
+    0%,100%{opacity:.5;}
+    50%{opacity:.95;}
+  }
+
+  /* ======================= INPUT ======================= */
+  .wish-input-area{
+    width:100%;
+    max-width:320px;
+    opacity:0;
+    transform:translateY(10px);
+    transition:opacity .7s ease, transform .7s ease;
+    pointer-events:none;
+    position:relative;
+    z-index:2;
+  }
+  .wish-input-area.show{
+    opacity:1;
+    transform:translateY(0);
+    pointer-events:auto;
+  }
+
+  .wish-input{
+    width:100%;
+    background:rgba(254,243,199,.04);
+    border:1px solid rgba(251,191,36,.22);
+    border-radius:14px;
+    padding:14px 18px;
+    color:var(--cream);
+    font-family:'Caveat',cursive;
+    font-size:22px;
+    text-align:center;
+    outline:none;
+    transition:all .3s ease;
+    box-shadow:
+      0 0 30px rgba(251,191,36,.08),
+      inset 0 0 20px rgba(251,191,36,.04);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+  }
+  .wish-input:focus{
+    border-color:rgba(251,191,36,.55);
+    background:rgba(254,243,199,.07);
+    box-shadow:
+      0 0 44px rgba(251,191,36,.22),
+      inset 0 0 24px rgba(251,191,36,.08);
+  }
+  .wish-input::placeholder{
+    color:rgba(254,243,199,.35);
+  }
+
+  /* ======================= RELEASE BUTTON ======================= */
+  .release-btn{
+    margin-top:18px;
+    background:linear-gradient(135deg, #fbbf24, #f59e0b);
+    color:#1a1a2e;
+    border:0;
+    border-radius:14px;
+    padding:15px 32px;
+    font-family:'Oswald',sans-serif;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:all .4s ease;
+    box-shadow:
+      0 10px 30px rgba(251,191,36,.3),
+      0 0 0 0 rgba(251,191,36,.5);
+    opacity:0;
+    transform:translateY(10px);
+    pointer-events:none;
+    position:relative;
+    z-index:2;
+  }
+  .release-btn.show{
+    opacity:1;
+    transform:translateY(0);
+    pointer-events:auto;
+  }
+  .release-btn:hover{
+    box-shadow:
+      0 12px 40px rgba(251,191,36,.5),
+      0 0 0 6px rgba(251,191,36,.10);
+  }
+  .release-btn:active{transform:translateY(1px) scale(.98);}
+
+  /* финальный текст после отпускания */
+  .farewell-text{
+    position:absolute;
+    top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    font-family:'Caveat',cursive;
+    font-size:30px;
+    color:var(--cream);
+    text-align:center;
+    text-shadow:
+      0 0 30px rgba(251,191,36,.7),
+      0 0 60px rgba(251,191,36,.35);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .8s ease;
+    z-index:3;
+    padding:0 24px;
+    line-height:1.3;
+  }
+  .farewell-text.show{opacity:1;}
+
+  /* ======================= INVITATION ======================= */
+  .invitation{
+    position:absolute;
+    inset:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% 0%, rgba(99,102,241,.12), transparent 70%),
+      linear-gradient(180deg, #0a0e1a 0%, #05070f 100%);
+    overflow-y:auto;
+    overflow-x:hidden;
+    scrollbar-width:none;
+    opacity:0;
+    transition:opacity 1s ease;
+    z-index:20;
+  }
+  .invitation::-webkit-scrollbar{display:none;}
+  .invitation.showing{opacity:1;}
+
+  .invite-header{
+    position:sticky;
+    top:0;
+    z-index:20;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:14px 20px;
+    background:rgba(5,7,15,.75);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--line);
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+    font-weight:600;
+  }
+  .status-dot{
+    width:8px;height:8px;border-radius:50%;
+    background:#22c55e;
+    box-shadow:0 0 8px #22c55e;
+    animation:pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot{50%{opacity:.55;}}
+  .invite-brand{
+    margin-left:auto;
+    color:var(--cream);
+    letter-spacing:.24em;
+    font-family:'Oswald',sans-serif;
+  }
+
+  .invite-hero{
+    padding:30px 22px 22px;
+    position:relative;
+  }
+
+  .wish-echo{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 14px;
+    background:rgba(251,191,36,.08);
+    border:1px solid rgba(251,191,36,.25);
+    border-radius:999px;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--amber);
+    font-weight:600;
+    margin-bottom:20px;
+  }
+  .wish-echo span{color:var(--cream);font-family:'Caveat',cursive;font-size:15px;letter-spacing:0;text-transform:none;font-weight:500;max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+  .invite-title{
+    font-family:'Caveat',cursive;
+    font-size:38px;
+    line-height:1.08;
+    color:var(--cream);
+    margin-bottom:10px;
+    font-weight:700;
+  }
+  .invite-title em{
+    font-style:normal;
+    color:var(--amber);
+    text-shadow:0 0 30px rgba(251,191,36,.4);
+  }
+
+  .invite-sub{
+    font-size:14px;
+    line-height:1.6;
+    color:var(--muted);
+    max-width:300px;
+  }
+
+  .section{padding:14px 20px 8px;}
+
+  .section-label{
+    font-family:'Oswald',sans-serif;
+    font-size:11px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin-bottom:8px;
+    font-weight:600;
+  }
+
+  .section-title{
+    font-family:'Oswald',sans-serif;
+    font-size:22px;
+    font-weight:600;
+    letter-spacing:-.005em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+    color:var(--cream);
+  }
+
+  .activity-list{display:flex;flex-direction:column;gap:10px;}
+
+  .activity-card{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:15px;
+    background:var(--card);
+    border:1.5px solid transparent;
+    border-radius:8px;
+    cursor:pointer;
+    transition:.2s ease;
+    position:relative;
+    overflow:hidden;
+  }
+  .activity-card::before{
+    content:"";
+    position:absolute;
+    left:0;top:0;bottom:0;
+    width:3px;
+    background:var(--accent,var(--amber));
+    opacity:.35;
+    transition:opacity .2s;
+  }
+  .activity-card:hover{background:var(--card-hi);}
+  .activity-card.selected{
+    border-color:var(--accent,var(--amber));
+    background:var(--card-hi);
+  }
+  .activity-card.selected::before{opacity:1;}
+
+  .activity-card[data-id="valorant"]{--accent:#f87171;}
+  .activity-card[data-id="talk"]{--accent:#5eead4;}
+  .activity-card[data-id="movie"]{--accent:#f9a8d4;}
+
+  .activity-icon{
+    flex-shrink:0;
+    width:44px;height:44px;
+    border-radius:10px;
+    display:grid;
+    place-items:center;
+    font-size:20px;
+    border:1px solid var(--line);
+  }
+  .activity-card[data-id="valorant"] .activity-icon{background:rgba(248,113,113,.12);}
+  .activity-card[data-id="talk"] .activity-icon{background:rgba(94,234,212,.10);}
+  .activity-card[data-id="movie"] .activity-icon{background:rgba(249,168,212,.12);}
+
+  .activity-info{flex:1;min-width:0;}
+  .activity-info h3{
+    font-family:'Oswald',sans-serif;
+    font-size:15px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    margin-bottom:3px;
+  }
+  .activity-info p{
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.4;
+  }
+
+  .activity-check{
+    width:22px;height:22px;
+    border-radius:6px;
+    border:1.5px solid var(--line);
+    display:grid;
+    place-items:center;
+    font-size:13px;
+    color:transparent;
+    transition:.2s;
+    flex-shrink:0;
+    font-weight:700;
+  }
+  .activity-card.selected .activity-check{
+    background:var(--accent,var(--amber));
+    border-color:var(--accent,var(--amber));
+    color:#0a0e1a;
+  }
+
+  .time-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+  }
+  .time-slot{
+    background:var(--card);
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:15px 8px;
+    font-family:'Oswald',sans-serif;
+    font-size:16px;
+    font-weight:600;
+    letter-spacing:.08em;
+    color:var(--cream);
+    cursor:pointer;
+    transition:.2s ease;
+  }
+  .time-slot:hover{background:var(--card-hi);}
+  .time-slot.selected{
+    background:var(--amber);
+    color:#0a0e1a;
+    border-color:var(--amber);
+    box-shadow:0 0 24px rgba(251,191,36,.4);
+  }
+
+  .confirm-wrap{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    padding:20px;
+  }
+
+  .confirm-btn{
+    width:100%;
+    padding:18px;
+    background:linear-gradient(135deg, #fbbf24, #f59e0b);
+    color:#0a0e1a;
+    border:0;
+    border-radius:10px;
+    font-family:'Oswald',sans-serif;
+    font-size:16px;
+    font-weight:600;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:.2s ease;
+  }
+  .confirm-btn:not(:disabled):hover{
+    box-shadow:0 10px 40px rgba(251,191,36,.45);
+  }
+  .confirm-btn:not(:disabled):active{transform:translateY(1px);}
+  .confirm-btn:not(:disabled){animation:btn-glow 2.4s infinite;}
+  @keyframes btn-glow{
+    0%,100%{box-shadow:0 0 0 rgba(251,191,36,.5);}
+    50%{box-shadow:0 0 30px rgba(251,191,36,.6);}
+  }
+  .confirm-btn:disabled{
+    background:var(--card);
+    color:var(--muted);
+    cursor:not-allowed;
+    animation:none;
+  }
+
+  .decline-btn{
+    width:100%;
+    padding:14px;
+    background:transparent;
+    color:var(--muted);
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    font-family:'Oswald',sans-serif;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:.2s ease;
+  }
+  .decline-btn:hover{
+    color:var(--cream);
+    border-color:rgba(254,243,199,.25);
+  }
+  .decline-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+  .confirm-note{
+    text-align:center;
+    font-size:11px;
+    color:var(--muted);
+    margin-top:2px;
+    letter-spacing:.08em;
+  }
+
+  /* ======================= SUCCESS OVERLAY ======================= */
+  .success-overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(5,7,15,.94);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    z-index:200;
+    opacity:0;
+    transition:opacity .35s;
+  }
+  .success-overlay.show{display:flex;opacity:1;}
+
+  .success-card{
+    background:var(--card);
+    border:1.5px solid rgba(251,191,36,.5);
+    border-radius:16px;
+    padding:36px 24px 24px;
+    text-align:center;
+    width:100%;
+    max-width:340px;
+    animation:pop-in .45s cubic-bezier(.2,.9,.3,1.2);
+    box-shadow:0 0 60px rgba(251,191,36,.22);
+  }
+  .success-card.decline{
+    border-color:rgba(249,168,212,.4);
+    box-shadow:0 0 60px rgba(249,168,212,.15);
+  }
+  @keyframes pop-in{
+    0%{transform:scale(.85);opacity:0;}
+    100%{transform:scale(1);opacity:1;}
+  }
+
+  .success-icon{
+    width:72px;height:72px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#fbbf24,#f59e0b);
+    color:#0a0e1a;
+    display:grid;
+    place-items:center;
+    font-size:34px;
+    font-weight:700;
+    margin:0 auto 18px;
+    box-shadow:0 0 36px rgba(251,191,36,.6);
+    animation:check-pop .55s .15s cubic-bezier(.2,.9,.3,1.5) both;
+  }
+  .success-card.decline .success-icon{
+    background:linear-gradient(135deg,#f9a8d4,#f472b6);
+    box-shadow:0 0 36px rgba(249,168,212,.5);
+  }
+  @keyframes check-pop{
+    0%{transform:scale(0);}
+    100%{transform:scale(1);}
+  }
+
+  .success-card h2{
+    font-family:'Caveat',cursive;
+    font-size:32px;
+    font-weight:700;
+    margin-bottom:4px;
+    color:var(--cream);
+  }
+  .success-card > p{
+    font-size:13px;
+    color:var(--muted);
+    margin-bottom:20px;
+  }
+
+  .success-detail{
+    background:rgba(251,191,36,.05);
+    border:1px solid rgba(251,191,36,.15);
+    border-radius:10px;
+    padding:14px;
+    margin-bottom:20px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    text-align:left;
+  }
+  .success-detail > div{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:13px;
+    gap:12px;
+  }
+  .success-detail > div > span:last-child{
+    text-align:right;
+    word-break:break-word;
+    color:var(--cream);
+  }
+  .success-detail .label{
+    color:var(--muted);
+    font-size:10.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    font-weight:600;
+    flex-shrink:0;
+  }
+
+  .btn-secondary{
+    background:transparent;
+    border:1.5px solid var(--line);
+    color:var(--cream);
+    padding:12px 24px;
+    border-radius:10px;
+    font-family:'Oswald',sans-serif;
+    font-size:13px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    font-weight:600;
+    cursor:pointer;
+    width:100%;
+    transition:.2s;
+  }
+  .btn-secondary:hover{background:var(--card-hi);}
+</style>
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- ============ WISH SCREEN ============ -->
+  <div class="wish-screen" id="wishScreen">
+    <div class="stars" id="stars"></div>
+
+    <p class="wish-kicker">для Сони</p>
+    <h1 class="wish-title">загадай желание<br>на этот вечер</h1>
+
+    <div class="sky-text" id="skyText"></div>
+
+    <div class="lantern-wrap" id="lanternWrap" onclick="lightLantern()">
+      <div class="lantern-handle"></div>
+      <div class="lantern" id="lantern">
+        <div class="lantern-body">
+          <div class="lantern-flame"></div>
+        </div>
+        <div class="lantern-base"></div>
+      </div>
+    </div>
+
+    <p class="tap-hint" id="tapHint">нажми на фонарик, чтобы зажечь</p>
+
+    <div class="wish-input-area" id="wishInputArea">
+      <input
+        type="text"
+        class="wish-input"
+        id="wishInput"
+        placeholder="напиши здесь ✨"
+        maxlength="90"
+        autocomplete="off"
+      >
+    </div>
+
+    <button class="release-btn" id="releaseBtn" onclick="releaseWish()">
+      отпустить в небо
+    </button>
+
+    <div class="farewell-text" id="farewellText">
+      ✨<br>желание улетело в небо
+    </div>
+  </div>
+
+  <!-- ============ INVITATION ============ -->
+  <div class="invitation" id="invitation">
+    <div class="invite-header">
+      <span class="status-dot"></span>
+      <span>online</span>
+      <span class="invite-brand">Discord</span>
+    </div>
+
+    <div class="invite-hero">
+      <div class="wish-echo" id="wishEcho" style="display:none;">
+        ✨ <span id="wishEchoText"></span>
+      </div>
+      <h1 class="invite-title">
+        Соня,<br><em>присоединяйся 👀</em>
+      </h1>
+      <p class="invite-sub">
+        Желание загадано. Осталось выбрать — когда удобно и чем займёмся, а я подстроюсь.
+      </p>
+    </div>
+
+    <section class="section">
+      <div class="section-label">01 · чем займёмся</div>
+      <h2 class="section-title">Выбери активности</h2>
+      <div class="activity-list">
+        <div class="activity-card" data-id="valorant">
+          <div class="activity-icon">🎯</div>
+          <div class="activity-info">
+            <h3>Valorant</h3>
+            <p>дуо в ранкед или кастомки</p>
+          </div>
+          <div class="activity-check">✓</div>
+        </div>
+        <div class="activity-card" data-id="talk">
+          <div class="activity-icon">💬</div>
+          <div class="activity-info">
+            <h3>Поговорить</h3>
+            <p>просто в войсе — мемы, обо всём</p>
+          </div>
+          <div class="activity-check">✓</div>
+        </div>
+        <div class="activity-card" data-id="movie">
+          <div class="activity-icon">🍿</div>
+          <div class="activity-info">
+            <h3>Фильм / YouTube</h3>
+            <p>watch party в Discord</p>
+          </div>
+          <div class="activity-check">✓</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-label">02 · когда</div>
+      <h2 class="section-title">Сегодня, удобно?</h2>
+      <div class="time-grid">
+        <button class="time-slot" data-time="18:00">18:00</button>
+        <button class="time-slot" data-time="19:00">19:00</button>
+        <button class="time-slot" data-time="20:00">20:00</button>
+        <button class="time-slot" data-time="21:00">21:00</button>
+        <button class="time-slot" data-time="22:00">22:00</button>
+        <button class="time-slot" data-time="23:00">23:00</button>
+      </div>
+    </section>
+
+    <div class="confirm-wrap">
+      <button class="confirm-btn" id="confirmBtn" disabled onclick="confirmMeeting()">
+        Я буду 🎉
+      </button>
+      <button class="decline-btn" id="declineBtn" onclick="declineMeeting()">
+        Не смогу 😔
+      </button>
+      <p class="confirm-note">подтверждение придёт в Telegram</p>
+    </div>
+  </div>
+
+  <!-- ============ SUCCESS ============ -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-card" id="successCard">
+      <div class="success-icon" id="successIcon">✓</div>
+      <h2 id="successTitle">Соня в деле!</h2>
+      <p id="successSubtitle">Подтверждение отправлено</p>
+      <div class="success-detail" id="successDetail">
+        <div>
+          <span class="label">Когда</span>
+          <span id="successTime">—</span>
+        </div>
+        <div>
+          <span class="label">Чем</span>
+          <span id="successActivities">—</span>
+        </div>
+      </div>
+      <button class="btn-secondary" onclick="closeSuccess()">закрыть</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  /* ================= STATE ================= */
+  const state = {
+    wish: null,
+    activities: new Set(),
+    time: null,
+    lanternLit: false,
+    confirmed: false,
+    declined: false,
+    emberInterval: null
+  };
+
+  const ACTIVITY_NAMES = {
+    valorant: 'Valorant',
+    talk: 'Поговорить',
+    movie: 'Фильм / YouTube'
+  };
+
+  /* ================= TELEGRAM ================= */
+  const TG_TOKEN   = '8824802274:AAFZkjpQ0m1ilqMCuVKdnFwI0LSoXp5-xT8';
+  const TG_CHAT_ID = '750771887';
+
+  function sendToTelegram(text) {
+    return new Promise(resolve => {
+      const url = `https://api.telegram.org/bot${TG_TOKEN}/sendMessage`
+        + `?chat_id=${TG_CHAT_ID}`
+        + `&parse_mode=HTML`
+        + `&text=${encodeURIComponent(text)}`;
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(true);
+      img.src = url;
+      setTimeout(() => resolve(true), 1800);
+    });
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  /* ================= ЗВЁЗДЫ ================= */
+  (function createStars(){
+    const layer = document.getElementById('stars');
+    const count = window.innerWidth < 500 ? 70 : 100;
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = Math.random() * 2 + 1;
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top = Math.random() * 100 + '%';
+      s.style.animationDelay = (Math.random() * 4) + 's';
+      s.style.animationDuration = (2.5 + Math.random() * 3) + 's';
+      if (Math.random() > 0.85) s.style.background = '#fef3c7';
+      layer.appendChild(s);
+    }
+  })();
+
+  /* ================= ЗАЖЕЧЬ ФОНАРИК ================= */
+  function lightLantern() {
+    if (state.lanternLit) return;
+    state.lanternLit = true;
+
+    const lantern = document.getElementById('lantern');
+    const hint = document.getElementById('tapHint');
+    const inputArea = document.getElementById('wishInputArea');
+    const input = document.getElementById('wishInput');
+
+    lantern.classList.add('lit');
+    hint.classList.add('hide');
+
+    setTimeout(() => {
+      inputArea.classList.add('show');
+      setTimeout(() => input.focus(), 400);
+    }, 500);
+
+    /* Угольки */
+    startEmbers();
+  }
+
+  function startEmbers() {
+    if (state.emberInterval) return;
+    state.emberInterval = setInterval(spawnEmber, 420);
+  }
+
+  function spawnEmber() {
+    if (!state.lanternLit || state.confirmed) return;
+    const wrap = document.getElementById('lanternWrap');
+    if (!wrap) return;
+    const e = document.createElement('div');
+    e.className = 'ember';
+    e.style.left = (42 + Math.random() * 16) + '%';
+    e.style.top = '55%';
+    e.style.animationDuration = (1.4 + Math.random() * 1.2) + 's';
+    wrap.appendChild(e);
+    setTimeout(() => e.remove(), 2800);
+  }
+
+  /* ================= ВВОД ЖЕЛАНИЯ ================= */
+  const wishInput = document.getElementById('wishInput');
+  const skyText = document.getElementById('skyText');
+  const releaseBtn = document.getElementById('releaseBtn');
+  const lanternWrap = document.getElementById('lanternWrap');
+  const lantern = document.getElementById('lantern');
+
+  wishInput.addEventListener('input', () => {
+    const val = wishInput.value.trim();
+    state.wish = val || null;
+
+    /* Текст в небе */
+    skyText.textContent = val;
+    if (val.length > 0) skyText.classList.add('visible');
+    else skyText.classList.remove('visible');
+
+    /* Фонарик светится ярче с набором текста */
+    if (val.length > 0) {
+      const intensity = Math.min(val.length / 40, 1);
+      const glow1 = 40 + intensity * 60;
+      const glow2 = 80 + intensity * 100;
+      lantern.style.filter = `drop-shadow(0 0 ${glow1}px rgba(251,191,36,${0.35 + intensity * 0.4}))`;
+    } else {
+      lantern.style.filter = 'none';
+    }
+
+    /* Кнопка "отпустить" появляется, когда набрано ≥ 3 символов */
+    if (val.length >= 3) releaseBtn.classList.add('show');
+    else releaseBtn.classList.remove('show');
+  });
+
+  /* ================= ОТПУСТИТЬ ================= */
+  async function releaseWish() {
+    const wish = (state.wish || '').trim();
+    if (wish.length < 3) return;
+
+    /* Блокируем ввод */
+    wishInput.disabled = true;
+    releaseBtn.classList.remove('show');
+    releaseBtn.disabled = true;
+
+    /* Останавливаем угольки */
+    if (state.emberInterval) {
+      clearInterval(state.emberInterval);
+      state.emberInterval = null;
+    }
+
+    /* Отправляем в Telegram сразу — на случай, если она уйдёт */
+    await sendToTelegram(
+      '✨ <b>Соня загадала желание</b>\n\n' +
+      '💫 «' + escapeHtml(wish) + '»'
+    );
+
+    /* Фонарик и текст улетают */
+    skyText.style.transition = 'opacity 2.8s ease, transform 3s cubic-bezier(.4,0,.6,1)';
+    skyText.style.opacity = '0';
+    skyText.style.transform = 'translateY(-220px) scale(.6)';
+
+    lanternWrap.classList.add('flying');
+
+    /* Прощальный текст */
+    setTimeout(() => {
+      document.getElementById('farewellText').classList.add('show');
+    }, 2000);
+
+    /* Переход к приглашению */
+    setTimeout(() => {
+      document.getElementById('wishScreen').classList.add('fading');
+      setTimeout(() => {
+        document.getElementById('wishScreen').style.display = 'none';
+        showInvitation();
+      }, 950);
+    }, 3400);
+  }
+
+  function showInvitation() {
+    const inv = document.getElementById('invitation');
+    inv.style.display = 'block';
+    inv.scrollTop = 0;
+    requestAnimationFrame(() => inv.classList.add('showing'));
+
+    /* Показываем «эхо» желания в приглашении */
+    if (state.wish) {
+      const echo = document.getElementById('wishEcho');
+      const echoText = document.getElementById('wishEchoText');
+      echoText.textContent = '«' + state.wish + '»';
+      echo.style.display = 'inline-flex';
+    }
+  }
+
+  /* ================= АКТИВНОСТИ ================= */
+  document.querySelectorAll('.activity-card').forEach(card => {
+    card.addEventListener('click', () => {
+      if (state.confirmed || state.declined) return;
+      const id = card.dataset.id;
+      if (state.activities.has(id)) {
+        state.activities.delete(id);
+        card.classList.remove('selected');
+      } else {
+        state.activities.add(id);
+        card.classList.add('selected');
+      }
+      updateConfirm();
+    });
+  });
+
+  /* ================= ВРЕМЯ ================= */
+  document.querySelectorAll('.time-slot').forEach(slot => {
+    slot.addEventListener('click', () => {
+      if (state.confirmed || state.declined) return;
+      document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+      slot.classList.add('selected');
+      state.time = slot.dataset.time;
+      updateConfirm();
+    });
+  });
+
+  function updateConfirm() {
+    const btn = document.getElementById('confirmBtn');
+    const ready = state.activities.size > 0 && state.time;
+    btn.disabled = !ready || state.confirmed || state.declined;
+  }
+
+  /* ================= ПОДТВЕРЖДЕНИЕ ================= */
+  async function confirmMeeting() {
+    if (state.confirmed || state.declined) return;
+    state.confirmed = true;
+
+    const btn = document.getElementById('confirmBtn');
+    const declineBtn = document.getElementById('declineBtn');
+    btn.disabled = true;
+    declineBtn.disabled = true;
+    btn.textContent = 'Отправляем...';
+
+    const activities = Array.from(state.activities)
+      .map(id => ACTIVITY_NAMES[id])
+      .join(', ');
+
+    const wishLine = state.wish ? '\n✨ Желание: «' + escapeHtml(state.wish) + '»' : '';
+
+    const message =
+      '✅ <b>Соня будет!</b>\n\n' +
+      '🕒 Время: сегодня, ' + state.time + '\n' +
+      '🎮 Чем займёмся: ' + activities +
+      wishLine + '\n\n' +
+      '💌 Подтверждение из приглашения';
+
+    await sendToTelegram(message);
+
+    const card = document.getElementById('successCard');
+    card.classList.remove('decline');
+    document.getElementById('successIcon').textContent = '✓';
+    document.getElementById('successTitle').textContent = 'Соня в деле!';
+    document.getElementById('successSubtitle').textContent = 'Подтверждение отправлено';
+    document.getElementById('successDetail').style.display = 'flex';
+    document.getElementById('successTime').textContent = 'сегодня, ' + state.time;
+    document.getElementById('successActivities').textContent = activities;
+
+    /* Добавляем строку с желанием в детали */
+    const detail = document.getElementById('successDetail');
+    if (state.wish) {
+      const row = document.createElement('div');
+      row.innerHTML = '<span class="label">Желание</span><span>«' + escapeHtml(state.wish) + '»</span>';
+      detail.appendChild(row);
+    }
+
+    document.getElementById('successOverlay').classList.add('show');
+    btn.textContent = 'Подтверждено ✓';
+  }
+
+  /* ================= ОТКАЗ ================= */
+  async function declineMeeting() {
+    if (state.confirmed || state.declined) return;
+    state.declined = true;
+
+    const btn = document.getElementById('confirmBtn');
+    const declineBtn = document.getElementById('declineBtn');
+    btn.disabled = true;
+    declineBtn.disabled = true;
+    declineBtn.textContent = 'Отправляем...';
+
+    const wishLine = state.wish ? '\n✨ Желание было: «' + escapeHtml(state.wish) + '»' : '';
+
+    const message =
+      '😔 <b>Соня не сможет</b>\n\n' +
+      '🕒 Сегодня не получается — предложи другой день' +
+      wishLine + '\n\n' +
+      '💌 Ответ из приглашения';
+
+    await sendToTelegram(message);
+
+    const card = document.getElementById('successCard');
+    card.classList.add('decline');
+    document.getElementById('successIcon').textContent = '🌙';
+    document.getElementById('successTitle').textContent = 'Понял, перенесём';
+    document.getElementById('successSubtitle').textContent = 'Ответ отправлен — договоримся на другой день';
+    document.getElementById('successDetail').style.display = 'none';
+    document.getElementById('successOverlay').classList.add('show');
+
+    declineBtn.textContent = 'Ответ отправлен';
+  }
+
+  function closeSuccess() {
+    document.getElementById('successOverlay').classList.remove('show');
+  }
+</script>
+
+</body>
+</html>
