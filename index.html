@@ -10,18 +10,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --night-1:#0a0e1a;
-    --night-2:#05070f;
     --amber:#fbbf24;
-    --amber-deep:#f59e0b;
     --cream:#fef3c7;
-    --ink:#1a1a2e;
     --muted:#8b93a8;
     --line:rgba(254,243,199,.12);
     --card:#131826;
     --card-hi:#1a2135;
-    --teal:#5eead4;
-    --pink:#f9a8d4;
   }
 
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -44,7 +38,7 @@
     width:100%;
     max-width:420px;
     height:100vh;
-    background:var(--night-2);
+    background:#05070f;
     overflow:hidden;
     display:flex;
     flex-direction:column;
@@ -92,12 +86,11 @@
     position:absolute;
     background:#fff;
     border-radius:50%;
-    box-shadow:0 0 4px rgba(255,255,255,.85);
     animation:twinkle 4s infinite;
   }
   @keyframes twinkle{
-    0%,100%{opacity:.25;transform:scale(1);}
-    50%{opacity:1;transform:scale(1.15);}
+    0%,100%{opacity:.25;}
+    50%{opacity:.9;}
   }
 
   .wish-kicker{
@@ -107,8 +100,6 @@
     text-transform:uppercase;
     color:var(--amber);
     margin-bottom:14px;
-    opacity:0;
-    animation:fade-in .8s .3s forwards;
     position:relative;
     z-index:2;
   }
@@ -121,19 +112,11 @@
     color:var(--cream);
     margin-bottom:6px;
     font-weight:700;
-    opacity:0;
-    animation:fade-in .9s .5s forwards;
     position:relative;
     z-index:2;
     text-shadow:0 0 30px rgba(251,191,36,.25);
   }
 
-  @keyframes fade-in{
-    from{opacity:0;transform:translateY(8px);}
-    to{opacity:1;transform:translateY(0);}
-  }
-
-  /* Небесный текст (желание) */
   .sky-text{
     font-family:'Caveat',cursive;
     font-size:26px;
@@ -141,13 +124,11 @@
     text-align:center;
     color:var(--cream);
     max-width:320px;
-    min-height:0;
     margin:0 0 16px;
     padding:0 12px;
     text-shadow:
       0 0 20px rgba(251,191,36,.7),
-      0 0 40px rgba(251,191,36,.35),
-      0 0 70px rgba(251,191,36,.15);
+      0 0 40px rgba(251,191,36,.35);
     opacity:0;
     transform:translateY(6px);
     transition:opacity .5s ease, transform .5s ease;
@@ -171,6 +152,7 @@
     cursor:pointer;
     margin:4px 0 18px;
     z-index:2;
+    user-select:none;
     transition:transform .3s ease;
   }
   .lantern-wrap:active{transform:scale(.97);}
@@ -218,12 +200,10 @@
     box-shadow:
       inset -18px 0 34px rgba(0,0,0,.22),
       inset 18px 0 30px rgba(0,0,0,.16),
-      inset 0 -24px 34px rgba(0,0,0,.28),
       0 12px 30px rgba(0,0,0,.5);
     overflow:hidden;
   }
 
-  /* вертикальные «складки» бумаги */
   .lantern-body::before{
     content:'';
     position:absolute;
@@ -234,7 +214,6 @@
     pointer-events:none;
   }
 
-  /* горлышко сверху */
   .lantern-body::after{
     content:'';
     position:absolute;
@@ -266,11 +245,11 @@
     background:radial-gradient(ellipse at 50% 60%, #fff7ed 0%, #fbbf24 40%, #f59e0b 75%, #ea580c 100%);
     border-radius:50% 50% 50% 50% / 65% 65% 35% 35%;
     opacity:0;
-    filter:blur(.4px);
-    box-shadow:0 0 20px #fbbf24, 0 0 44px #f59e0b, 0 0 70px rgba(245,158,11,.55);
-    transition:opacity .8s ease, transform .3s ease;
+    box-shadow:0 0 14px #fbbf24;
+    transition:opacity .8s ease;
     position:relative;
     z-index:1;
+    will-change:transform, opacity;
   }
 
   .lantern.lit .lantern-body{
@@ -278,37 +257,34 @@
     box-shadow:
       inset -18px 0 34px rgba(245,158,11,.30),
       inset 18px 0 30px rgba(245,158,11,.22),
-      inset 0 -24px 34px rgba(180,83,9,.35),
-      0 0 60px rgba(251,191,36,.55),
-      0 0 120px rgba(251,191,36,.30),
-      0 0 180px rgba(251,191,36,.15);
+      0 0 60px rgba(251,191,36,.55);
   }
   .lantern.lit .lantern-flame{
     opacity:1;
-    animation:flame-flicker .18s ease-in-out infinite alternate;
+    animation:flame-flicker 1.2s ease-in-out infinite alternate;
   }
   @keyframes flame-flicker{
     0%{transform:scale(1) translateY(0);}
-    100%{transform:scale(1.08) translateY(-2px);}
+    100%{transform:scale(1.06) translateY(-1px);}
   }
 
-  /* Угольки */
+  /* Угольки — лёгкие, без тяжёлых теней */
   .ember{
     position:absolute;
     width:4px;height:4px;
     background:#fbbf24;
     border-radius:50%;
-    box-shadow:0 0 8px #fbbf24, 0 0 14px #f59e0b;
+    opacity:.85;
     pointer-events:none;
     z-index:3;
     animation:ember-rise linear forwards;
+    will-change:transform, opacity;
   }
   @keyframes ember-rise{
-    0%{transform:translateY(0) scale(1);opacity:1;}
-    100%{transform:translateY(-130px) scale(.25);opacity:0;}
+    0%{transform:translateY(0) scale(1);opacity:.9;}
+    100%{transform:translateY(-120px) scale(.2);opacity:0;}
   }
 
-  /* подсказка "нажми" */
   .tap-hint{
     font-family:'Caveat',cursive;
     font-size:20px;
@@ -354,23 +330,14 @@
     font-size:22px;
     text-align:center;
     outline:none;
-    transition:all .3s ease;
-    box-shadow:
-      0 0 30px rgba(251,191,36,.08),
-      inset 0 0 20px rgba(251,191,36,.04);
-    backdrop-filter:blur(10px);
-    -webkit-backdrop-filter:blur(10px);
+    transition:border-color .3s ease, background .3s ease, box-shadow .3s ease;
   }
   .wish-input:focus{
     border-color:rgba(251,191,36,.55);
     background:rgba(254,243,199,.07);
-    box-shadow:
-      0 0 44px rgba(251,191,36,.22),
-      inset 0 0 24px rgba(251,191,36,.08);
+    box-shadow:0 0 24px rgba(251,191,36,.15);
   }
-  .wish-input::placeholder{
-    color:rgba(254,243,199,.35);
-  }
+  .wish-input::placeholder{color:rgba(254,243,199,.35);}
 
   /* ======================= RELEASE BUTTON ======================= */
   .release-btn{
@@ -386,10 +353,8 @@
     letter-spacing:.22em;
     text-transform:uppercase;
     cursor:pointer;
-    transition:all .4s ease;
-    box-shadow:
-      0 10px 30px rgba(251,191,36,.3),
-      0 0 0 0 rgba(251,191,36,.5);
+    transition:opacity .4s ease, transform .4s ease, box-shadow .4s ease;
+    box-shadow:0 10px 30px rgba(251,191,36,.3);
     opacity:0;
     transform:translateY(10px);
     pointer-events:none;
@@ -401,14 +366,8 @@
     transform:translateY(0);
     pointer-events:auto;
   }
-  .release-btn:hover{
-    box-shadow:
-      0 12px 40px rgba(251,191,36,.5),
-      0 0 0 6px rgba(251,191,36,.10);
-  }
   .release-btn:active{transform:translateY(1px) scale(.98);}
 
-  /* финальный текст после отпускания */
   .farewell-text{
     position:absolute;
     top:50%;left:50%;
@@ -417,9 +376,7 @@
     font-size:30px;
     color:var(--cream);
     text-align:center;
-    text-shadow:
-      0 0 30px rgba(251,191,36,.7),
-      0 0 60px rgba(251,191,36,.35);
+    text-shadow:0 0 30px rgba(251,191,36,.7);
     opacity:0;
     pointer-events:none;
     transition:opacity .8s ease;
@@ -429,7 +386,7 @@
   }
   .farewell-text.show{opacity:1;}
 
-  /* ======================= INVITATION ======================= */
+  /* ======================= INVITATION (ИСПРАВЛЕНО) ======================= */
   .invitation{
     position:absolute;
     inset:0;
@@ -439,12 +396,20 @@
     overflow-y:auto;
     overflow-x:hidden;
     scrollbar-width:none;
-    opacity:0;
-    transition:opacity 1s ease;
     z-index:20;
+    /* Ключевое: невидимый слой не должен ловить тапы */
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transition:opacity 1s ease, visibility 0s linear 1s;
   }
   .invitation::-webkit-scrollbar{display:none;}
-  .invitation.showing{opacity:1;}
+  .invitation.showing{
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+    transition:opacity 1s ease, visibility 0s linear 0s;
+  }
 
   .invite-header{
     position:sticky;
@@ -478,13 +443,10 @@
     font-family:'Oswald',sans-serif;
   }
 
-  .invite-hero{
-    padding:30px 22px 22px;
-    position:relative;
-  }
+  .invite-hero{padding:30px 22px 22px;}
 
   .wish-echo{
-    display:inline-flex;
+    display:none;
     align-items:center;
     gap:8px;
     padding:8px 14px;
@@ -498,6 +460,7 @@
     font-weight:600;
     margin-bottom:20px;
   }
+  .wish-echo.show{display:inline-flex;}
   .wish-echo span{color:var(--cream);font-family:'Caveat',cursive;font-size:15px;letter-spacing:0;text-transform:none;font-weight:500;max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
   .invite-title{
@@ -537,7 +500,6 @@
     font-family:'Oswald',sans-serif;
     font-size:22px;
     font-weight:600;
-    letter-spacing:-.005em;
     text-transform:uppercase;
     margin-bottom:14px;
     color:var(--cream);
@@ -567,7 +529,6 @@
     opacity:.35;
     transition:opacity .2s;
   }
-  .activity-card:hover{background:var(--card-hi);}
   .activity-card.selected{
     border-color:var(--accent,var(--amber));
     background:var(--card-hi);
@@ -600,11 +561,7 @@
     letter-spacing:.06em;
     margin-bottom:3px;
   }
-  .activity-info p{
-    font-size:12px;
-    color:var(--muted);
-    line-height:1.4;
-  }
+  .activity-info p{font-size:12px;color:var(--muted);line-height:1.4;}
 
   .activity-check{
     width:22px;height:22px;
@@ -642,7 +599,6 @@
     cursor:pointer;
     transition:.2s ease;
   }
-  .time-slot:hover{background:var(--card-hi);}
   .time-slot.selected{
     background:var(--amber);
     color:#0a0e1a;
@@ -672,14 +628,11 @@
     cursor:pointer;
     transition:.2s ease;
   }
-  .confirm-btn:not(:disabled):hover{
-    box-shadow:0 10px 40px rgba(251,191,36,.45);
-  }
   .confirm-btn:not(:disabled):active{transform:translateY(1px);}
   .confirm-btn:not(:disabled){animation:btn-glow 2.4s infinite;}
   @keyframes btn-glow{
     0%,100%{box-shadow:0 0 0 rgba(251,191,36,.5);}
-    50%{box-shadow:0 0 30px rgba(251,191,36,.6);}
+    50%{box-shadow:0 0 26px rgba(251,191,36,.55);}
   }
   .confirm-btn:disabled{
     background:var(--card);
@@ -703,10 +656,6 @@
     cursor:pointer;
     transition:.2s ease;
   }
-  .decline-btn:hover{
-    color:var(--cream);
-    border-color:rgba(254,243,199,.25);
-  }
   .decline-btn:disabled{opacity:.4;cursor:not-allowed;}
 
   .confirm-note{
@@ -717,7 +666,7 @@
     letter-spacing:.08em;
   }
 
-  /* ======================= SUCCESS OVERLAY ======================= */
+  /* ======================= SUCCESS ======================= */
   .success-overlay{
     position:absolute;
     inset:0;
@@ -834,9 +783,7 @@
     font-weight:600;
     cursor:pointer;
     width:100%;
-    transition:.2s;
   }
-  .btn-secondary:hover{background:var(--card-hi);}
 </style>
 </head>
 <body>
@@ -852,7 +799,7 @@
 
     <div class="sky-text" id="skyText"></div>
 
-    <div class="lantern-wrap" id="lanternWrap" onclick="lightLantern()">
+    <div class="lantern-wrap" id="lanternWrap">
       <div class="lantern-handle"></div>
       <div class="lantern" id="lantern">
         <div class="lantern-body">
@@ -875,7 +822,7 @@
       >
     </div>
 
-    <button class="release-btn" id="releaseBtn" onclick="releaseWish()">
+    <button class="release-btn" id="releaseBtn" type="button">
       отпустить в небо
     </button>
 
@@ -893,7 +840,7 @@
     </div>
 
     <div class="invite-hero">
-      <div class="wish-echo" id="wishEcho" style="display:none;">
+      <div class="wish-echo" id="wishEcho">
         ✨ <span id="wishEchoText"></span>
       </div>
       <h1 class="invite-title">
@@ -939,20 +886,20 @@
       <div class="section-label">02 · когда</div>
       <h2 class="section-title">Сегодня, удобно?</h2>
       <div class="time-grid">
-        <button class="time-slot" data-time="18:00">18:00</button>
-        <button class="time-slot" data-time="19:00">19:00</button>
-        <button class="time-slot" data-time="20:00">20:00</button>
-        <button class="time-slot" data-time="21:00">21:00</button>
-        <button class="time-slot" data-time="22:00">22:00</button>
-        <button class="time-slot" data-time="23:00">23:00</button>
+        <button class="time-slot" data-time="18:00" type="button">18:00</button>
+        <button class="time-slot" data-time="19:00" type="button">19:00</button>
+        <button class="time-slot" data-time="20:00" type="button">20:00</button>
+        <button class="time-slot" data-time="21:00" type="button">21:00</button>
+        <button class="time-slot" data-time="22:00" type="button">22:00</button>
+        <button class="time-slot" data-time="23:00" type="button">23:00</button>
       </div>
     </section>
 
     <div class="confirm-wrap">
-      <button class="confirm-btn" id="confirmBtn" disabled onclick="confirmMeeting()">
+      <button class="confirm-btn" id="confirmBtn" disabled type="button">
         Я буду 🎉
       </button>
-      <button class="decline-btn" id="declineBtn" onclick="declineMeeting()">
+      <button class="decline-btn" id="declineBtn" type="button">
         Не смогу 😔
       </button>
       <p class="confirm-note">подтверждение придёт в Telegram</p>
@@ -975,14 +922,13 @@
           <span id="successActivities">—</span>
         </div>
       </div>
-      <button class="btn-secondary" onclick="closeSuccess()">закрыть</button>
+      <button class="btn-secondary" id="closeSuccessBtn" type="button">закрыть</button>
     </div>
   </div>
 
 </div>
 
 <script>
-  /* ================= STATE ================= */
   const state = {
     wish: null,
     activities: new Set(),
@@ -990,7 +936,8 @@
     lanternLit: false,
     confirmed: false,
     declined: false,
-    emberInterval: null
+    emberInterval: null,
+    emberCount: 0
   };
 
   const ACTIVITY_NAMES = {
@@ -1021,14 +968,15 @@
     return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
 
-  /* ================= ЗВЁЗДЫ ================= */
+  /* ================= ЗВЁЗДЫ (облегчённые) ================= */
   (function createStars(){
     const layer = document.getElementById('stars');
-    const count = window.innerWidth < 500 ? 70 : 100;
+    const count = window.innerWidth < 500 ? 40 : 60;
+    const frag = document.createDocumentFragment();
     for (let i = 0; i < count; i++) {
       const s = document.createElement('div');
       s.className = 'star';
-      const size = Math.random() * 2 + 1;
+      const size = Math.random() * 1.6 + 1;
       s.style.width = size + 'px';
       s.style.height = size + 'px';
       s.style.left = Math.random() * 100 + '%';
@@ -1036,116 +984,104 @@
       s.style.animationDelay = (Math.random() * 4) + 's';
       s.style.animationDuration = (2.5 + Math.random() * 3) + 's';
       if (Math.random() > 0.85) s.style.background = '#fef3c7';
-      layer.appendChild(s);
+      frag.appendChild(s);
     }
+    layer.appendChild(frag);
   })();
 
-  /* ================= ЗАЖЕЧЬ ФОНАРИК ================= */
+  /* ================= ЭЛЕМЕНТЫ ================= */
+  const lanternWrap  = document.getElementById('lanternWrap');
+  const lantern      = document.getElementById('lantern');
+  const tapHint      = document.getElementById('tapHint');
+  const wishInputArea= document.getElementById('wishInputArea');
+  const wishInput    = document.getElementById('wishInput');
+  const skyText      = document.getElementById('skyText');
+  const releaseBtn   = document.getElementById('releaseBtn');
+
+  /* ================= ЗАЖЕЧЬ ================= */
   function lightLantern() {
     if (state.lanternLit) return;
     state.lanternLit = true;
 
-    const lantern = document.getElementById('lantern');
-    const hint = document.getElementById('tapHint');
-    const inputArea = document.getElementById('wishInputArea');
-    const input = document.getElementById('wishInput');
-
     lantern.classList.add('lit');
-    hint.classList.add('hide');
+    tapHint.classList.add('hide');
 
     setTimeout(() => {
-      inputArea.classList.add('show');
-      setTimeout(() => input.focus(), 400);
-    }, 500);
+      wishInputArea.classList.add('show');
+      setTimeout(() => wishInput.focus(), 350);
+    }, 450);
 
-    /* Угольки */
     startEmbers();
   }
 
+  lanternWrap.addEventListener('click', lightLantern);
+
+  /* ================= УГОЛЬКИ (с лимитом) ================= */
   function startEmbers() {
     if (state.emberInterval) return;
-    state.emberInterval = setInterval(spawnEmber, 420);
+    state.emberInterval = setInterval(spawnEmber, 700);
   }
 
   function spawnEmber() {
-    if (!state.lanternLit || state.confirmed) return;
-    const wrap = document.getElementById('lanternWrap');
-    if (!wrap) return;
+    if (!state.lanternLit || state.confirmed || state.emberCount >= 4) return;
     const e = document.createElement('div');
     e.className = 'ember';
     e.style.left = (42 + Math.random() * 16) + '%';
     e.style.top = '55%';
-    e.style.animationDuration = (1.4 + Math.random() * 1.2) + 's';
-    wrap.appendChild(e);
-    setTimeout(() => e.remove(), 2800);
+    e.style.animationDuration = (1.6 + Math.random()) + 's';
+    lanternWrap.appendChild(e);
+    state.emberCount++;
+    setTimeout(() => {
+      e.remove();
+      state.emberCount = Math.max(0, state.emberCount - 1);
+    }, 2800);
   }
 
   /* ================= ВВОД ЖЕЛАНИЯ ================= */
-  const wishInput = document.getElementById('wishInput');
-  const skyText = document.getElementById('skyText');
-  const releaseBtn = document.getElementById('releaseBtn');
-  const lanternWrap = document.getElementById('lanternWrap');
-  const lantern = document.getElementById('lantern');
-
   wishInput.addEventListener('input', () => {
     const val = wishInput.value.trim();
     state.wish = val || null;
 
-    /* Текст в небе */
     skyText.textContent = val;
-    if (val.length > 0) skyText.classList.add('visible');
-    else skyText.classList.remove('visible');
+    skyText.classList.toggle('visible', val.length > 0);
 
-    /* Фонарик светится ярче с набором текста */
-    if (val.length > 0) {
-      const intensity = Math.min(val.length / 40, 1);
-      const glow1 = 40 + intensity * 60;
-      const glow2 = 80 + intensity * 100;
-      lantern.style.filter = `drop-shadow(0 0 ${glow1}px rgba(251,191,36,${0.35 + intensity * 0.4}))`;
-    } else {
-      lantern.style.filter = 'none';
-    }
-
-    /* Кнопка "отпустить" появляется, когда набрано ≥ 3 символов */
-    if (val.length >= 3) releaseBtn.classList.add('show');
-    else releaseBtn.classList.remove('show');
+    /* Не трогаем filter — это и вешало страницу.
+       Просто показываем/прячем кнопку. */
+    releaseBtn.classList.toggle('show', val.length >= 3);
   });
 
   /* ================= ОТПУСТИТЬ ================= */
-  async function releaseWish() {
+  releaseBtn.addEventListener('click', async () => {
     const wish = (state.wish || '').trim();
     if (wish.length < 3) return;
 
-    /* Блокируем ввод */
-    wishInput.disabled = true;
-    releaseBtn.classList.remove('show');
     releaseBtn.disabled = true;
+    releaseBtn.classList.remove('show');
+    wishInput.disabled = true;
 
-    /* Останавливаем угольки */
     if (state.emberInterval) {
       clearInterval(state.emberInterval);
       state.emberInterval = null;
     }
 
-    /* Отправляем в Telegram сразу — на случай, если она уйдёт */
-    await sendToTelegram(
+    /* Отправляем желание сразу — на случай закрытия страницы */
+    sendToTelegram(
       '✨ <b>Соня загадала желание</b>\n\n' +
       '💫 «' + escapeHtml(wish) + '»'
     );
 
-    /* Фонарик и текст улетают */
+    /* Текст в небе улетает */
     skyText.style.transition = 'opacity 2.8s ease, transform 3s cubic-bezier(.4,0,.6,1)';
     skyText.style.opacity = '0';
     skyText.style.transform = 'translateY(-220px) scale(.6)';
 
+    /* Фонарик улетает */
     lanternWrap.classList.add('flying');
 
-    /* Прощальный текст */
     setTimeout(() => {
       document.getElementById('farewellText').classList.add('show');
-    }, 2000);
+    }, 1900);
 
-    /* Переход к приглашению */
     setTimeout(() => {
       document.getElementById('wishScreen').classList.add('fading');
       setTimeout(() => {
@@ -1153,20 +1089,19 @@
         showInvitation();
       }, 950);
     }, 3400);
-  }
+  });
 
+  /* ================= ПОКАЗ ПРИГЛАШЕНИЯ ================= */
   function showInvitation() {
     const inv = document.getElementById('invitation');
-    inv.style.display = 'block';
     inv.scrollTop = 0;
     requestAnimationFrame(() => inv.classList.add('showing'));
 
-    /* Показываем «эхо» желания в приглашении */
     if (state.wish) {
       const echo = document.getElementById('wishEcho');
       const echoText = document.getElementById('wishEchoText');
       echoText.textContent = '«' + state.wish + '»';
-      echo.style.display = 'inline-flex';
+      echo.classList.add('show');
     }
   }
 
@@ -1199,35 +1134,37 @@
 
   function updateConfirm() {
     const btn = document.getElementById('confirmBtn');
-    const ready = state.activities.size > 0 && state.time;
+    const ready = state.activities.size > 0 && !!state.time;
     btn.disabled = !ready || state.confirmed || state.declined;
   }
 
   /* ================= ПОДТВЕРЖДЕНИЕ ================= */
-  async function confirmMeeting() {
+  const confirmBtn = document.getElementById('confirmBtn');
+  const declineBtn = document.getElementById('declineBtn');
+
+  confirmBtn.addEventListener('click', async () => {
     if (state.confirmed || state.declined) return;
     state.confirmed = true;
 
-    const btn = document.getElementById('confirmBtn');
-    const declineBtn = document.getElementById('declineBtn');
-    btn.disabled = true;
+    confirmBtn.disabled = true;
     declineBtn.disabled = true;
-    btn.textContent = 'Отправляем...';
+    confirmBtn.textContent = 'Отправляем...';
 
     const activities = Array.from(state.activities)
       .map(id => ACTIVITY_NAMES[id])
       .join(', ');
 
-    const wishLine = state.wish ? '\n✨ Желание: «' + escapeHtml(state.wish) + '»' : '';
+    const wishLine = state.wish
+      ? '\n✨ Желание: «' + escapeHtml(state.wish) + '»'
+      : '';
 
-    const message =
+    await sendToTelegram(
       '✅ <b>Соня будет!</b>\n\n' +
       '🕒 Время: сегодня, ' + state.time + '\n' +
       '🎮 Чем займёмся: ' + activities +
       wishLine + '\n\n' +
-      '💌 Подтверждение из приглашения';
-
-    await sendToTelegram(message);
+      '💌 Подтверждение из приглашения'
+    );
 
     const card = document.getElementById('successCard');
     card.classList.remove('decline');
@@ -1238,7 +1175,6 @@
     document.getElementById('successTime').textContent = 'сегодня, ' + state.time;
     document.getElementById('successActivities').textContent = activities;
 
-    /* Добавляем строку с желанием в детали */
     const detail = document.getElementById('successDetail');
     if (state.wish) {
       const row = document.createElement('div');
@@ -1247,29 +1183,28 @@
     }
 
     document.getElementById('successOverlay').classList.add('show');
-    btn.textContent = 'Подтверждено ✓';
-  }
+    confirmBtn.textContent = 'Подтверждено ✓';
+  });
 
   /* ================= ОТКАЗ ================= */
-  async function declineMeeting() {
+  declineBtn.addEventListener('click', async () => {
     if (state.confirmed || state.declined) return;
     state.declined = true;
 
-    const btn = document.getElementById('confirmBtn');
-    const declineBtn = document.getElementById('declineBtn');
-    btn.disabled = true;
+    confirmBtn.disabled = true;
     declineBtn.disabled = true;
     declineBtn.textContent = 'Отправляем...';
 
-    const wishLine = state.wish ? '\n✨ Желание было: «' + escapeHtml(state.wish) + '»' : '';
+    const wishLine = state.wish
+      ? '\n✨ Желание было: «' + escapeHtml(state.wish) + '»'
+      : '';
 
-    const message =
+    await sendToTelegram(
       '😔 <b>Соня не сможет</b>\n\n' +
       '🕒 Сегодня не получается — предложи другой день' +
       wishLine + '\n\n' +
-      '💌 Ответ из приглашения';
-
-    await sendToTelegram(message);
+      '💌 Ответ из приглашения'
+    );
 
     const card = document.getElementById('successCard');
     card.classList.add('decline');
@@ -1278,13 +1213,13 @@
     document.getElementById('successSubtitle').textContent = 'Ответ отправлен — договоримся на другой день';
     document.getElementById('successDetail').style.display = 'none';
     document.getElementById('successOverlay').classList.add('show');
-
     declineBtn.textContent = 'Ответ отправлен';
-  }
+  });
 
-  function closeSuccess() {
+  /* ================= ЗАКРЫТЬ ================= */
+  document.getElementById('closeSuccessBtn').addEventListener('click', () => {
     document.getElementById('successOverlay').classList.remove('show');
-  }
+  });
 </script>
 
 </body>
